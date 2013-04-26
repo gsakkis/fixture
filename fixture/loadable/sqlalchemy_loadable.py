@@ -324,13 +324,11 @@ class TableMedium(DBLoadableFixture.StorageMediumAdapter):
             c = self.conn.execute(stmt, params)
         else:
             c = stmt.execute(params)
-
         # In SQLAlchemy 0.8 this changed to a property with another name
-        if hasattr(c, "primary_key"):
-            primary_key = c.primary_key
+        if hasattr(c, "inserted_primary_key"):
+            primary_key = c.inserted_primary_key
         else:
             primary_key = c.last_inserted_ids()
-
         if primary_key is None:
             raise NotImplementedError(
                     "what can we do with a None primary key?")
