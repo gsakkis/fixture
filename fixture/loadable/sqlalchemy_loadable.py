@@ -34,6 +34,9 @@ def negotiated_medium(obj, dataset):
         return MappedClassMedium(obj, dataset)
     elif is_mapped_class(obj):
         return MappedClassMedium(obj, dataset)
+    elif callable(obj):
+        # XXX: assume it is a factory function that returns a model
+        return MappedClassMedium(obj, dataset)
     else:
         raise NotImplementedError("object %s is not supported by %s" % (
                                                     obj, SQLAlchemyFixture))
@@ -363,7 +366,7 @@ def is_assigned_mapper(obj):
         def is_assigned(obj):
             try:
                 cm = class_mapper(obj)
-            except sqlalchemy_exc.InvalidRequestError:
+            except sqlalchemy_exc.SQLAlchemyError:
                 return False
             return True
 
